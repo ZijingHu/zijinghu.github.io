@@ -1,0 +1,99 @@
+body {
+    font: 16px/1.5 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, 
+    serif; font-size: 19px;
+}
+
+h2 {
+    margin-top: 40px; 
+    border-bottom: 
+    1px solid #999;
+}
+
+dt {
+    float:left;
+}
+
+dd {
+    margin-left: 32px;
+    font-feature-settings:"liga" 0;
+}
+
+p {
+    text-align: left; 
+    line-height: 1.4em; 
+    margin-top: 0px; 
+    margin-bottom: 0px; 
+    font-feature-settings:"liga" 0;
+}
+
+li {
+    font-feature-settings:"liga" 0;
+}
+
+ul {
+    margin-top: 0px; 
+    margin-bottom: 0px;
+}
+
+a:link {
+    text-decoration: none; 
+    color: blue;
+}
+
+a:visited {
+    text-decoration: none; 
+    color: blue;
+}
+
+.container {
+    width: 750px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    padding: 50px 0 50px 0;
+}
+
+.title {
+    text-align: left;
+}
+
+.katex {
+    font-size: 1em !important;
+} 
+
+.bp {
+    width: 50px;
+    display: inline-block;
+    vertical-align: top;
+    font-weight:700
+}
+
+.bc {
+  width: 700px;
+  display: inline-block;
+  margin-bottom: 18px;
+}
+
+table {
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+code {
+    -webkit-box-decoration-break: clone;
+    margin: 12px;
+    font-family: consolas,"Liberation Mono",courier,monospace;
+    word-wrap: break-word;
+    font-size: 12px;
+}
+
+pre {
+    padding: 12px;
+    margin: 12px;
+    border-style:solid;
+    border-width: 1.5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

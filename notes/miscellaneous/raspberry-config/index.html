@@ -1,0 +1,196 @@
+﻿
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+                <title>Raspberry Pi 4B Configuration - Zijing "Jimmy" Hu's Blog</title>
+                <link rel="stylesheet" type="text/css" href="/js/ps.css">
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+                <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+                <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        renderMathInElement(document.body, {
+                            delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false}
+                            ] 
+                        });
+                    });
+                </script>
+            </head>
+            <body>
+                <div class="container">
+                    <h1 class="title">Raspberry Pi 4B Configuration</h1>
+                    2021-07-07
+                    <span style="float:right; _position:relative;">
+                        <b><a href="/home">Home</a>
+                        &ensp;
+                        <a href="/notes">Notes</a></b>
+                    </span><br/>
+                    <p><br><br><ul><li><a href="#0">1. Initialization</a></li><ul><li><a href="#1">1.1 Install Raspberry Pi OS</a></li><li><a href="#2">1.2 First time Pi login through WIFI</a></li><li><a href="#3">1.3 Control Pi throught remote desktop</a></li></ul><li><a href="#4">2. Prolong Raspberry Pi's service life</a></li><ul><li><a href="#5">2.1 Protect SD card</a></li><li><a href="#6">2.2 Temperature</a></li></ul><li><a href="#7">3. OLED Screen</a></li><li><a href="#8">4. Other</a></li><ul><li><a href="#9">Launch Scripts At Boot Time</a></li><li><a href="#10">Read-only File Systems</a></li><li><a href="#11">Mount Flash Drive</a></li></ul></ul></p>
+<h2 id="0">1. Initialization</h2>
+<h3 id="1">1.1 Install Raspberry Pi OS</h3>
+<ol>
+<li>Download <a href="https://www.raspberrypi.org/software/">Raspberry Pi Imager</a>, an official tool to help install Raspberry Pi OS.</li>
+<li>Pick a suitable version of <a href="https://www.raspberrypi.org/software/operating-systems/">Raspberry Pi OS</a> and download it.</li>
+<li>Open Raspberry Pi Imager and choose the downloaded Raspberry Pi OS file.</li>
+</ol>
+<center><img src="index.assets/image-20210707214204418.png" style="zoom: 67%;" /></center>
+<ol start="4">
+<li>Choose the path of SD card for installing.</li>
+</ol>
+<h3 id="2">1.2 First time Pi login through WIFI</h3>
+<ol>
+<li>
+<p>Create a file named &quot;wpa_supplicant.conf&quot; under ./boot with the following content.</p>
+<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+network={
+  ssid=&quot;WIFI Name&quot;
+  psk=&quot;WIFI Password&quot;
+}
+</code></pre>
+</li>
+<li>
+<p>Create an empty file named &quot;ssh&quot; under ./boot.</p>
+</li>
+<li>
+<p>Find the IP address of the Raspberry Pi and connect it through <a href="https://www.putty.org/">PuTTY</a>. The default account name and password should be &quot;pi&quot; and &quot;raspberry&quot;</p>
+</li>
+</ol>
+<h3 id="3">1.3 Control Pi throught remote desktop</h3>
+<ol>
+<li>
+<p>Install VNCServer on Pi</p>
+<pre><code>sudo apt-get install tightvncserver
+</code></pre>
+</li>
+<li>
+<p>Install <a href="https://www.realvnc.com/en/connect/download/viewer/">VNCServer</a> on PC</p>
+</li>
+<li>
+<p>Access Pi through VNC</p>
+</li>
+</ol>
+<h2 id="4">2. Prolong Raspberry Pi's service life</h2>
+<h3 id="5">2.1 Protect SD card</h3>
+<ol>
+<li>
+<p>Edit /etc/fstab.</p>
+<pre><code class="language-f">sudo nano /etc/fstab
+</code></pre>
+</li>
+<li>
+<p>Add following scripts:</p>
+<pre><code class="language-f">tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100m 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=30m 0 0
+tmpfs /var/log tmpfs defaults,noatime,nosuid,mode=0755,size=100m 0 0
+tmpfs /var/run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0
+</code></pre>
+</li>
+</ol>
+<h3 id="6">2.2 Temperature</h3>
+<ol>
+<li>
+<p>Monitor the core temperature</p>
+<pre><code class="language-f">/opt/vc/bin/vcgencmd measure_temp
+</code></pre>
+</li>
+<li>
+<p><a href="https://www.amazon.com/gp/product/B091L1XKL6/ref=ppx_yo_dt_b_asin_title_o04_s01?ie=UTF8&amp;psc=1">GeeekPi Raspberry Pi 4 Aluminum Heatsink with PWM Controllable Fan</a></p>
+<p><code>sudo raspi-config</code>  →  4 Performance Options  →  P4 Fan  →  14  →  input temperature</p>
+</li>
+</ol>
+<h2 id="7">3. OLED Screen</h2>
+<ol>
+<li>
+<p>Set up I2C</p>
+<pre><code class="language-text">sudo apt-get install -y python-smbus
+sudo apt-get install -y i2c-tools
+sudo raspi-config
+</code></pre>
+<p>Interfacing Options → enable I2C → reboot the Raspberry Pi</p>
+</li>
+<li>
+<p>Install Adafruit-SSD1306</p>
+<pre><code class="language-text">sudo python -m pip install --upgrade pip setuptools wheel
+sudo apt-get remove python-pip python3-pip
+sudo apt-get install python-pip python3-pip
+sudo apt-get install python-pil python3-pil
+sudo pip install Adafruit-SSD1306
+cd ~
+git clone https://github.com/adafruit/Adafruit_Python_SSD1306.git
+cd ~/Adafruit_Python_SSD1306/examples/
+</code></pre>
+</li>
+<li>
+<p>Connect Screen</p>
+<p>Screen GND - Raspberry Pi GND<br />
+Screen VCC - Raspberry Pi 3V3<br />
+Screen SDA - Raspberry Pi SDA<br />
+Screen SCL - Raspberry Pi SCL</p>
+<pre><code class="language-text">sudo i2cdetect -y 1
+# sudo i2cdetect -y 0
+</code></pre>
+</li>
+</ol>
+<center><img src="index.assets/raspberry-pi-3-pinout.jpg" style="zoom: 50%;" /></center>
+<ol start="4">
+<li>
+<p>Edit</p>
+<pre><code class="language-text">cd ~
+sudo cp ~/Adafruit_Python_SSD1306/examples/stats.py ~/
+sudo nano stats.py # choose suitable settings
+sudo python stats.py
+</code></pre>
+</li>
+<li>
+<p>Get Temperature</p>
+<pre><code class="language-text">def get_cpu_temp():
+    tempfile = open(&#x27;/sys/class/thermal/thermal_zone0/temp&#x27;)
+    cpu_temp = tempfile.read()
+    tempfile.close()
+    return float(cpu_temp)
+</code></pre>
+</li>
+</ol>
+<h2 id="8">4. Other</h2>
+<h3 id="9">Launch Scripts At Boot Time</h3>
+<p>Add scripts into &quot;./etc/rc.local&quot; before &quot;exit 0&quot;.</p>
+<h3 id="10">Read-only File Systems</h3>
+<pre><code class="language-text">sudo mount -o remount, rw /
+</code></pre>
+<h3 id="11">Mount Flash Drive</h3>
+<pre><code class="language-text">sudo fdisk -l
+
+sudo mkdir /mnt/udisk
+sudo mount -o uid=pi,gid=pi /dev/sda1 /mnt/udisk/
+</code></pre>
+
+                    <p style="border-top: 1px solid #dbdbdb; margin-top: 40px; margin-bottom: 40px;"></p>
+                    <div id="valine-thread"></div>
+                    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                    <script src='/js/V.js'></script>
+                    <script>
+                        new Valine({
+                            el: '#valine-thread',
+                            appId: 'DSTtKETb5UeyXIjoPTpRnC8Y-gzGzoHsz',
+                            appKey: 'csHaHWqxD2Ujv84O7jaJWOSc',
+                            verify: false,
+                            avatar: 'robohash',
+                            placeholder: '',
+                            meta: ['nick', 'mail'],
+                            requiredFields: ['nick'],
+                            visitor: true,
+                            lang: 'en'
+                        })
+                    </script>
+                  
+                    <footer>
+                        <p style="padding: 5px 0 0 0; text-align: center; font-size: .9rem; border-top: 1px solid #dbdbdb;margin-top: 40px;">&#169; 2024 Zijing "Jimmy" Hu<br>This website is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0.</a></p>
+                    </footer>
+                </div>
+            </body>
+        </html>
+    

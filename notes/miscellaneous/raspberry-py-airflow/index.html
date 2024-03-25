@@ -1,0 +1,93 @@
+﻿
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+                <title>Python & Airflow on Raspberry Pi - Zijing "Jimmy" Hu's Blog</title>
+                <link rel="stylesheet" type="text/css" href="/js/ps.css">
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+                <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+                <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        renderMathInElement(document.body, {
+                            delimiters: [
+                              {left: "$$", right: "$$", display: true},
+                              {left: "$", right: "$", display: false}
+                            ] 
+                        });
+                    });
+                </script>
+            </head>
+            <body>
+                <div class="container">
+                    <h1 class="title">Python & Airflow on Raspberry Pi</h1>
+                    2021-07-29
+                    <span style="float:right; _position:relative;">
+                        <b><a href="/home">Home</a>
+                        &ensp;
+                        <a href="/notes">Notes</a></b>
+                    </span><br/>
+                    <p><br><br><ul><li><a href="#0">Jupyter Notebook</a></li><li><a href="#1">Airflow</a></li></ul></p>
+<h2 id="0">Jupyter Notebook</h2>
+<pre><code>jupyter-notebook --generate-config
+jupyter notebook password
+sudo nano .jupyter/jupyter_notebook_config.py
+
+# Edit configuration file
+# c.NotebookApp.ip=’*’
+# c.NotebookApp.open_browser = Fasle
+# c.NotebookApp.allow_remote_access = True
+
+jupyter notebook --ip 0.0.0.0 --port 8888
+# notebook can be accessed at https://raspberrypi:8888
+</code></pre>
+<h2 id="1">Airflow</h2>
+<pre><code>export AIRFLOW_HOME=~/airflow
+# TMPDIR={dir} pip install --cache-dir={dir} --build {dir} {package-name}
+TMPDIR=/var/tmp pip install --cache-dir=/var/tmp --build /var/tmp apache-airflow
+
+cd ~/airflow
+airflow init db
+airflow check
+
+airflow create_user [-h] [-r ROLE] [-u USERNAME] [-e EMAIL] [-f FIRSTNAME]
+                    [-l LASTNAME] [-p PASSWORD] [--use_random_password]
+
+# start airflow
+airflow webserver &amp; airflow scheduler
+# notebook can be accessed at https://raspberrypi:8080
+
+# Error: Already running on PID XXXX
+sudo lsof -i tcp:8080
+kill -9 XXXX
+rm $AIRFLOW_HOME/*.pid
+</code></pre>
+
+                    <p style="border-top: 1px solid #dbdbdb; margin-top: 40px; margin-bottom: 40px;"></p>
+                    <div id="valine-thread"></div>
+                    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+                    <script src='/js/V.js'></script>
+                    <script>
+                        new Valine({
+                            el: '#valine-thread',
+                            appId: 'DSTtKETb5UeyXIjoPTpRnC8Y-gzGzoHsz',
+                            appKey: 'csHaHWqxD2Ujv84O7jaJWOSc',
+                            verify: false,
+                            avatar: 'robohash',
+                            placeholder: '',
+                            meta: ['nick', 'mail'],
+                            requiredFields: ['nick'],
+                            visitor: true,
+                            lang: 'en'
+                        })
+                    </script>
+                  
+                    <footer>
+                        <p style="padding: 5px 0 0 0; text-align: center; font-size: .9rem; border-top: 1px solid #dbdbdb;margin-top: 40px;">&#169; 2024 Zijing "Jimmy" Hu<br>This website is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0.</a></p>
+                    </footer>
+                </div>
+            </body>
+        </html>
+    
